@@ -2,10 +2,20 @@
 #include <Arduino.h>
 #include <teclas.h>
 #include <semaforo.h>
+
+// ********************************** Integrantes *****************************************
+// Nombres: Henry Castro y Jhonatan Cambisaca
+// Materia: Control Digital 
+// Fecha: 19-06-2023
+// ****************************************************************************************
+
+
 // ****************************** Inputs/Outputs ******************************************
 int16_t SW1 = 7; int16_t SW2 = 6;                  // Pulsantes
 int16_t LED1=11; int16_t LED2=10; int16_t LED3 = 9; // LEDS 
+// ****************************************************************************************
 
+// ******************************* Programa Principal *************************************
 void setup() {
   pinMode(SW1,INPUT);
   pinMode(SW2,INPUT);

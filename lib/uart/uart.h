@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+// Estructura enumerada que engloba los posibles estados del semaforo y teclas
 typedef enum {
     BU1_BU2_1,
     BU1_BD2_1,
@@ -15,5 +16,6 @@ typedef enum {
     alarma_cero_1
 } variable_struct;
 
+// Funcion que muestra en consola el estado actual de la MEF DEL semaforo y teclas
 void imprimir(variable_struct variable, float velocidad);
 

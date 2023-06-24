@@ -39,7 +39,7 @@ bool* inicializar_MEF(int16_t SW1, int16_t SW2, int16_t delay2){
     datos = {SW1,SW2,delay2,es};                        
     es = actualizar_MEF(datos);                         //Actualizacion del estado de 
     
-    //Devolver el resultade 
+    //Devolver el resultado del flanco de bajada
     if (flanco_SW1) vector[0] = flanco_SW1;
     else vector[0] = false;
 
@@ -51,15 +51,19 @@ bool* inicializar_MEF(int16_t SW1, int16_t SW2, int16_t delay2){
 }
 
 var_estado actualizar_MEF(struct_actualizar var_struct){
+    // Variables Estáticas de almacenamiento de tiempo de ejecución
     static int16_t time_pass = 0;
     static int16_t time_present = 0;
-    static bool es_time = false; 
-    static bool es_SW1 = true; 
-    static bool es_SW2 = true;
-
+    // Variables Estáticas de estados
+    static bool es_time = false;        //Estado del delay no bloqueante
+    static bool es_SW1 = true;          //Estado del B1 
+    static bool es_SW2 = true;          //Estado del B2
+    
+    // Selector del estado de la MEF 
     switch (var_struct.es1){
     case BU1_BU2:
-        imprimir(BU1_BU2_1,0); 
+        imprimir(BU1_BU2_1,0);          //Imprime el Estado actual de la MEF        
+        // Detección de un flanco de bajada en cualquier pulsante 
         if (buttonPressed(var_struct.SW1) || buttonPressed(var_struct.SW2)){
             es_SW1 = false; 
             es_SW2 = false;
@@ -70,11 +74,10 @@ var_estado actualizar_MEF(struct_actualizar var_struct){
             es_SW2 = true; 
             return BU1_BU2; 
         }
-        //Serial.println("BU1_BU2");
         break;
     case BU1_BD2:
-        //Serial.println("BU1_BD2");
-        imprimir(BU1_BD2_1,0); 
+        imprimir(BU1_BD2_1,0);          //Imprime el Estado actual de la MEF    
+        // Detección de un flanco de bajada del Pulsante 1 o un flanco de subida del pulsante 2
         if (buttonPressed(var_struct.SW1) || buttonReleased(var_struct.SW2)){
             es_SW1 = false; 
             es_SW2 = true;
@@ -87,8 +90,8 @@ var_estado actualizar_MEF(struct_actualizar var_struct){
         }
         break;
     case BD1_BU2:
-        //Serial.println("BD1_BU2");
-        imprimir(BD1_BU2_1,0); 
+        imprimir(BD1_BU2_1,0);          //Imprime el Estado actual de la MEF   
+        // Detección de un flanco de subida del Pulsante 1 o un flanco de bajada del pulsante 2
         if (buttonReleased(var_struct.SW1) || buttonPressed(var_struct.SW2)){
             es_SW1 = true; 
             es_SW2 = false;
@@ -102,7 +105,8 @@ var_estado actualizar_MEF(struct_actualizar var_struct){
         break;
     case BD1_BD2:
         //Serial.println("BD1_BD2");
-        imprimir(BD1_BD2_1,0);
+        imprimir(BD1_BD2_1,0);            //Imprime el Estado actual de la MEF      
+        // Detección de un flanco de subida del Pulsante 1 o un flanco de subida del pulsante 2
         if (buttonReleased(var_struct.SW1) || buttonReleased(var_struct.SW2)){
             es_SW1 = true; 
             es_SW2 = true;
@@ -115,13 +119,16 @@ var_estado actualizar_MEF(struct_actualizar var_struct){
         } 
         break;
     case rebounds:
-        imprimir(rebounds_1,0); 
+        imprimir(rebounds_1,0);         //Imprime el Estado actual de la MEF     
+        // Inicio del retardo no bloqueante cuando es_time = false
         if (es_time == false) {time_pass = millis(); es_time = true;}
         time_present = millis();
+        // Verificar si se ha cumplido el delay
         if (time_present-time_pass > var_struct.delay1){
-            es_time = false;
+            es_time = false;            //Restauración del estado
             bool es_act_SW1, es_act_SW2;
             
+            //Verificación del flanco de bajada una vez pasado el delay  
             if (es_SW1 == digitalRead(var_struct.SW1)) {
                 if (es_SW1 == false) flanco_SW1 = true;
                 es_act_SW1 = es_SW1;
@@ -133,7 +140,7 @@ var_estado actualizar_MEF(struct_actualizar var_struct){
                 es_act_SW2 = es_SW2;
             }
             else es_act_SW2 = !es_SW2;
-
+            //En base al estado actual y anterior de los pulsantes se ubica al siguiente estado 
             if (es_act_SW1 == false){
                 if (es_act_SW2 == false) return BD1_BD2;
                 else return BD1_BU2;
@@ -143,9 +150,10 @@ var_estado actualizar_MEF(struct_actualizar var_struct){
                 else return BU1_BU2;
             } 
         }
-        else return rebounds;
+        else return rebounds;       //En caso de que no haya pasado el delay se retorna nuevamente al estado rebounds
         break;       
     default:
+        //Programación Defensiva 
         imprimir(BU1_BU2_1,0); 
         es_SW1 = true;
         es_SW2 = true;

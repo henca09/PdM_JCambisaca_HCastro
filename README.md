@@ -3,7 +3,7 @@
 - **Programa Principal:** [/src/main.cpp](/src/)
 - **MEF Pulsantes:** [/lib/teclas/](/lib/teclas/)
 - **MEF Semáforo:** [/lib/semaforo/](/lib/semaforo/)
-- **UART: ** [/lib/uart/](/lib/uart/)
+- **UART:** [/lib/uart/](/lib/uart/)
 ## Diseño de máquina de estados
 **Maquina de estados para el funcionamiento del Semaforo**
 La figura muestra una máquina de estados de tipo More, siendo que la entrada de cada estado sea tiempo o un flanco de bajada de un pulsante. El cambio de estado por tiempo esta definido de tal forma que se cumple con la secuencia definida en los requerimientos de la práctica. Por otro lado, el flanco de bajada del pulsante indica el cambio de secuencia, ya sea de modo Normal, Desconectado y Alarma. 

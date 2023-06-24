@@ -1,6 +1,6 @@
 # PdM_JCambisaca_HCastro
 ## Organización de Archivos 
-- **Programa Principal: ** [/src/main.cpp](/PdM_JCambisaca_HCastro/src/)
+- **Programa Principal: ** [/src/main.cpp](/src/)
 - **MEF Pulsantes: ** [/lib/teclas/](/PdM_JCambisaca_HCastro/lib/teclas/)
 - **MEF Semáforo: ** [/lib/semaforo/](/PdM_JCambisaca_HCastro/lib/semaforo/)
 - **UART: ** [/lib/uart/](/PdM_JCambisaca_HCastro/lib/uart/)
